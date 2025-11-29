@@ -1,0 +1,43 @@
+// src/store/cart.js
+import { reactive, computed, watch } from 'vue'
+
+const state = reactive({
+  items: JSON.parse(localStorage.getItem('cart-items') || '[]')
+})
+
+export const cartItems = computed(() => state.items.map(it => ({
+  ...it,
+  product: it.product
+})))
+
+export const cartTotal = computed(() =>
+  state.items.reduce((sum, it) => sum + it.product.price * it.qty, 0)
+)
+
+export function addToCart(product) {
+  const found = state.items.find(it => it.product.id === product.id)
+  if (found) {
+    found.qty += 1
+  } else {
+    state.items.push({ id: product.id, product, qty: 1 })
+  }
+}
+
+export function setQty(id, qty) {
+  const it = state.items.find(it => it.id === id)
+  if (it && qty > 0) it.qty = qty
+}
+
+export function removeFromCart(id) {
+  const idx = state.items.findIndex(it => it.id === id)
+  if (idx !== -1) state.items.splice(idx, 1)
+}
+
+// Persist cart to localStorage
+watch(
+  () => state.items,
+  (val) => {
+    localStorage.setItem('cart-items', JSON.stringify(val))
+  },
+  { deep: true }
+)
