@@ -1,5 +1,4 @@
 <script setup>
-// import Cart from './components/Cart.vue'
 </script>
 
 
@@ -13,6 +12,6 @@
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   padding: 2rem;
-  background-color: #e1e1e1ff;
+  background-color: rgb(255, 255, 255);
 }
 </style>

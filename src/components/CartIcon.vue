@@ -1,10 +1,10 @@
 <template>
   <div>
-    <v-btn icon @click="show = !show">
+    <span @click="show = !show" style="cursor:pointer;">
       <v-badge :content="totalCount" color="red" overlap>
         <v-icon>mdi-cart</v-icon>
       </v-badge>
-    </v-btn>
+    </span>
     <v-dialog v-model="show" max-width="500">
       <v-card>
         <v-card-title>Cart</v-card-title>
