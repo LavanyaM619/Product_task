@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <Cart />
+      <Header />
     <v-row v-if="loaded">
       <v-col cols="12" md="6">
         <v-img :src="product.images && product.images.length ? product.images[0] : ''" />
@@ -14,18 +14,20 @@
       </v-col>
     </v-row>
     <div v-else>Loading...</div>
+       <Footer/>
   </v-container>
 </template>
 
 <script>
 
-import Cart from '@/components/Cart.vue'
 import { addToCart } from '@/store/cart'
+import Header from '@/components/Layout/Header.vue'
+import Footer from '@/components/Layout/Footer.vue'
 
 const apiUrl = import.meta.env.VITE_API_URL
 
 export default {
-  components: { Cart },
+  components: { Header, Footer },
   props: ['id'],
   data() { 
     return { 
