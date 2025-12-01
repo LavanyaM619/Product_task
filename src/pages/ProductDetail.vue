@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-container v-if="product">
     <v-row>
       <v-col cols="12" md="6">
@@ -29,4 +29,4 @@ onMounted(async () => {
   const res = await fetch(`${apiUrl}/products/${route.params.id}`)
   product.value = await res.json()
 })
-</script>
+</script> -->

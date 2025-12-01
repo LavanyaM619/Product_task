@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-container class="py-6">
 
     <h2 class="text-center mb-6 font-weight-bold">📦 Product Listings</h2>
@@ -58,7 +58,7 @@
 
     <v-row justify="center" class="mt-6">
       <v-btn variant="tonal" class="mx-2" :disabled="page === 1" @click="prevPage">
-        ⬅ Prev
+         Prev
       </v-btn>
 
       <v-pagination
@@ -95,7 +95,7 @@ const snackbar = ref(false)
 const router = useRouter()
 
 function goToProduct(id) {
-  router.push(`/product/${id}`)
+  router.push(`/product/${id}`)//rediate the pages
 }
 
 async function fetchProducts() {
@@ -131,4 +131,4 @@ watch(page, fetchProducts)
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
-</style>
+</style> -->
