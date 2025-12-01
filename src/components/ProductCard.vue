@@ -3,7 +3,7 @@
   <v-card>
     <v-img :src="product.thumbnail || product.images[0]" height="200" @click="open" style="cursor:pointer;" />
     <v-card-title @click="open" style="cursor:pointer;">{{ product.title }}</v-card-title>
-    <v-card-subtitle>${{ product.price }}</v-card-subtitle>
+    <v-card-subtitle>Rs {{ product.price }}</v-card-subtitle>
     <v-card-actions>
       <v-btn
   @click.stop="add"

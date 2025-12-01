@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="12" md="6">
         <h2>{{ product.title }}</h2>
-        <div>${{ product.price }}</div>
+        <div>Rs {{ product.price }}</div>
         <div>{{ product.description }}</div>
         <v-btn color="primary" @click="addToCart(product)">Add to Cart</v-btn>
       

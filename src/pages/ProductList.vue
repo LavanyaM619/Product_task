@@ -27,7 +27,7 @@
           </v-card-title>
 
           <v-card-subtitle>
-            <strong class="text-primary">${{ product.price }}</strong>
+            <strong class="text-primary">Rs {{ product.price }}</strong>
           </v-card-subtitle>
 
           <v-chip class="my-2" color="primary" text-color="white" label small>

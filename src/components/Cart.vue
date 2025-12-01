@@ -6,13 +6,13 @@
         <img :src="it.product.thumbnail || it.product.images[0]" width="60" />
         <div class="ml-3">
           <div>{{ it.product.title }}</div>
-          <div>${{ it.product.price }}</div>
+          <div>Rs {{ it.product.price }}</div>
           <v-text-field v-model.number="it.qty" @change="update(it)" type="number" :min="1" style="width:100px"/>
           <v-btn @click="remove(it.id)">Remove</v-btn>
         </div>
-        <div class="ml-auto">${{ (it.product.price * it.qty).toFixed(2) }}</div>
+        <div class="ml-auto">Rs {{ (it.product.price * it.qty).toFixed(2) }}</div>
       </div>
-      <div class="text-right font-weight-bold">Total: ${{ total.toFixed(2) }}</div>
+      <div class="text-right font-weight-bold">Total: Rs {{ total.toFixed(2) }}</div>
     </div>
     <div class="mt-4">
       <v-btn color="primary" @click="addToCart(sampleProduct)">Add to Cart</v-btn>
