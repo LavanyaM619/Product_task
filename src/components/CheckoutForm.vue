@@ -1,8 +1,11 @@
 <template>
   <v-form ref="form" @submit.prevent="onSubmit">
-    <v-snackbar v-model="snackbar" color="error" :timeout="2500">
+    <v-alert v-if="errorMessages.length" type="error" prominent class="mb-4">
       <div v-for="(msg, i) in errorMessages" :key="i">{{ msg }}</div>
-    </v-snackbar>
+    </v-alert>
+      <v-alert v-if="successMessage" type="success" prominent class="mb-4">
+        {{ successMessage }}
+      </v-alert>
     <v-text-field v-model="name" label="Name" required></v-text-field>
     <v-text-field v-model="email" label="Email" required type="email"></v-text-field>
     <v-text-field v-model="address" label="Address" required></v-text-field>
@@ -22,7 +25,7 @@ const email = ref('')
 const address = ref('')
 const phone = ref('')
 const errorMessages = ref([])
-const snackbar = ref(false)
+  const successMessage = ref('')
 const router = useRouter()
 
 function validate() {
@@ -40,7 +43,6 @@ async function onSubmit() {
   const errors = validate()
   if (errors.length) {
     errorMessages.value = errors
-    snackbar.value = true
     return
   }
   const products = cartItems.value
@@ -80,15 +82,16 @@ async function onSubmit() {
     const order = data.data || data
     if (!res.ok || data.error) {
       errorMessages.value = data.details || [data.error || 'Checkout failed']
-      snackbar.value = true
       return
     }
     localStorage.setItem('last-order', JSON.stringify(order))
     clearCart()
-    router.push({ name: 'order-confirmation', params: { order } })
+      successMessage.value = 'Order placed successfully!'
+      setTimeout(() => {
+        
+      }, 1200)
   } catch (e) {
-    errorMessages.value = ['Network or server error']
-    snackbar.value = true
+    errorMessages.value = [e?.message || 'Network or server error']
   }
 }
 </script>
