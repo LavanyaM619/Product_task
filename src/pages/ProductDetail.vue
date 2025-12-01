@@ -24,7 +24,9 @@ const route = useRoute()
 const product = ref(null)
 
 onMounted(async () => {
-  const res = await fetch(`https://dummyjson.com/products/${route.params.id}`)
+     const apiUrl = import.meta.env.VITE_API_URL
+  
+  const res = await fetch(`${apiUrl}/products/${route.params.id}`)
   product.value = await res.json()
 })
 </script>

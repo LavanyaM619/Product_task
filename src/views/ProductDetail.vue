@@ -18,8 +18,11 @@
 </template>
 
 <script>
+
 import Cart from '@/components/Cart.vue'
 import { addToCart } from '@/store/cart'
+
+const apiUrl = import.meta.env.VITE_API_URL
 
 export default {
   components: { Cart },
@@ -32,7 +35,8 @@ export default {
     } 
   },
   async created() {
-    const res = await fetch(`https://dummyjson.com/products/${this.$route.params.id}`)
+    
+    const res = await fetch(`${apiUrl}/products/${this.$route.params.id}`)
     this.product = await res.json()
     this.loaded = true
   },
