@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="12" md="6">
         <h2>{{ product.title }}</h2>
-        <div>${{ product.price }}</div>
+        <div>Rs {{ product.price }}</div>
         <div>{{ product.description }}</div>
         <v-btn color="primary" @click="addToCart(product)">Add to Cart</v-btn>
       
@@ -24,7 +24,9 @@ const route = useRoute()
 const product = ref(null)
 
 onMounted(async () => {
-  const res = await fetch(`https://dummyjson.com/products/${route.params.id}`)
+     const apiUrl = import.meta.env.VITE_API_URL
+  
+  const res = await fetch(`${apiUrl}/products/${route.params.id}`)
   product.value = await res.json()
 })
 </script>

@@ -14,9 +14,9 @@
             <div v-for="it in items" :key="it.id" class="d-flex align-center mb-2">
               <img :src="it.product.thumbnail || it.product.images[0]" width="40" />
               <div class="ml-2">{{ it.product.title }} (x{{ it.qty }})</div>
-              <div class="ml-auto">${{ (it.product.price * it.qty).toFixed(2) }}</div>
+              <div class="ml-auto">Rs {{ (it.product.price * it.qty).toFixed(2) }}</div>
             </div>
-            <div class="text-right font-weight-bold">Total: ${{ total.toFixed(2) }}</div>
+            <div class="text-right font-weight-bold">Total: Rs {{ total.toFixed(2) }}</div>
           </div>
         </v-card-text>
       </v-card>

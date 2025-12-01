@@ -8,7 +8,7 @@
       <v-col cols="12" md="6">
         <h1>{{ product.title }}</h1>
         <p>{{ product.description }}</p>
-        <p>Price: ${{ product.price }}</p>
+        <p>Price: Rs {{ product.price }}</p>
         <v-text-field v-model.number="qty" label="Quantity" type="number" :min="1" />
         <v-btn @click="add">Add to Cart</v-btn>
       </v-col>
@@ -18,8 +18,11 @@
 </template>
 
 <script>
+
 import Cart from '@/components/Cart.vue'
 import { addToCart } from '@/store/cart'
+
+const apiUrl = import.meta.env.VITE_API_URL
 
 export default {
   components: { Cart },
@@ -32,7 +35,8 @@ export default {
     } 
   },
   async created() {
-    const res = await fetch(`https://dummyjson.com/products/${this.$route.params.id}`)
+    
+    const res = await fetch(`${apiUrl}/products/${this.$route.params.id}`)
     this.product = await res.json()
     this.loaded = true
   },

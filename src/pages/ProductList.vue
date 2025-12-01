@@ -27,7 +27,7 @@
           </v-card-title>
 
           <v-card-subtitle>
-            <strong class="text-primary">${{ product.price }}</strong>
+            <strong class="text-primary">Rs {{ product.price }}</strong>
           </v-card-subtitle>
 
           <v-chip class="my-2" color="primary" text-color="white" label small>
@@ -83,6 +83,8 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const products = ref([])
 const page = ref(1)
 const limit = 15
@@ -98,7 +100,7 @@ function goToProduct(id) {
 
 async function fetchProducts() {
   const skip = (page.value - 1) * limit
-  const res = await fetch(`https://dummyjson.com/products?limit=${limit}&skip=${skip}`)
+  const res = await fetch(`${apiUrl}/products?limit=${limit}&skip=${skip}`)
   const data = await res.json()
   products.value = data.products
   total.value = data.total
