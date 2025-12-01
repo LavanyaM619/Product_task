@@ -86,10 +86,10 @@ async function onSubmit() {
     }
     localStorage.setItem('last-order', JSON.stringify(order))
     clearCart()
-      successMessage.value = 'Order placed successfully!'
-      setTimeout(() => {
-        
-      }, 1200)
+    successMessage.value = 'Order placed successfully!'
+    setTimeout(() => {
+      router.push({ name: 'order-confirmation', params: { order } })
+    }, 1200)
   } catch (e) {
     errorMessages.value = [e?.message || 'Network or server error']
   }
