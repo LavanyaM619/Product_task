@@ -10,8 +10,10 @@ export const cartItems = computed(() => state.items.map(it => ({
   product: it.product
 })))
 
+import { getDiscountedPrice } from '@/utils/price'
+
 export const cartTotal = computed(() =>
-  state.items.reduce((sum, it) => sum + it.product.price * it.qty, 0)
+  state.items.reduce((sum, it) => sum + (parseFloat(getDiscountedPrice(it.product.price, it.product.discountPercentage)) * it.qty), 0)
 )
 
 export function addToCart(product, delta = 1) {
@@ -35,6 +37,11 @@ export function setQty(id, qty) {
 export function removeFromCart(id) {
   const idx = state.items.findIndex(it => it.id === id)
   if (idx !== -1) state.items.splice(idx, 1)
+}
+
+
+export function clearCart() {
+  state.items.splice(0, state.items.length)
 }
 
 // Persist cart to localStorage

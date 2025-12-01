@@ -7,6 +7,7 @@
     </v-row>
     <div v-else>Loading...</div>
     <Footer/>
+    <v-btn color="success" @click="goToCheckout">Checkout</v-btn>
   </v-container>
 </template>
 
@@ -27,6 +28,20 @@ export default {
     const res = await fetch(`${apiUrl}/products/${this.$route.params.id}`)
     this.product = await res.json()
     this.loaded = true
+  },
+  methods: {
+    goToCheckout() {
+      this.$router.push({
+        name: 'checkout',
+        query: {
+          id: this.product.id,
+          title: this.product.title,
+          price: this.product.price,
+          image: this.product.thumbnail || (this.product.images && this.product.images[0]) || '',
+          quantity: 1 // or qty if you implement a quantity selector
+        }
+      })
+    }
   }
 }
 </script>
