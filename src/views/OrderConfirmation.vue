@@ -53,21 +53,7 @@
               </v-list>
             </v-col>
             <v-col cols="12" md="6">
-              <v-card class="pa-2">
-                <v-card-title class="text-h6">Products</v-card-title>
-                <v-divider></v-divider>
-                <v-list>
-                  <v-list-item v-for="product in order.value.products" :key="product.id">
-                    <v-list-item-avatar>
-                      <v-img :src="product.image" alt="Product image" />
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title>{{ product.title }}</v-list-item-title>
-                      <v-list-item-subtitle>Price: {{ product.price }} | Qty: {{ product.quantity }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-card>
+              <OrderSummary :products="order.value.products" :total="order.value.totalAmount" />
             </v-col>
           </v-row>
         </div>
@@ -82,6 +68,7 @@
 </template>
 
 <script setup>
+import OrderSummary from '@/components/OrderSummary.vue'
 import { onMounted, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 

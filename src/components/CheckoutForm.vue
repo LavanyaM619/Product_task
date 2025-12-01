@@ -1,8 +1,8 @@
 <template>
   <v-form ref="form" @submit.prevent="onSubmit">
-    <v-alert v-if="errorMessages.length" type="error" class="mb-4" prominent>
+    <v-snackbar v-model="snackbar" color="error" :timeout="2500">
       <div v-for="(msg, i) in errorMessages" :key="i">{{ msg }}</div>
-    </v-alert>
+    </v-snackbar>
     <v-text-field v-model="name" label="Name" required></v-text-field>
     <v-text-field v-model="email" label="Email" required type="email"></v-text-field>
     <v-text-field v-model="address" label="Address" required></v-text-field>
@@ -22,6 +22,7 @@ const email = ref('')
 const address = ref('')
 const phone = ref('')
 const errorMessages = ref([])
+const snackbar = ref(false)
 const router = useRouter()
 
 function validate() {
@@ -39,9 +40,9 @@ async function onSubmit() {
   const errors = validate()
   if (errors.length) {
     errorMessages.value = errors
+    snackbar.value = true
     return
   }
-  // Build products array from cart, ensure id and image are strings and present
   const products = cartItems.value
     .map(item => {
       const id = item.product.id ? String(item.product.id) : ''
@@ -75,16 +76,19 @@ async function onSubmit() {
       })
     })
     const data = await res.json()
+    console.log('Checkout API response:', { status: res.status, ok: res.ok, data })
+    const order = data.data || data
     if (!res.ok || data.error) {
       errorMessages.value = data.details || [data.error || 'Checkout failed']
+      snackbar.value = true
       return
     }
-    // Success: persist order, clear cart, go to confirmation
-    localStorage.setItem('last-order', JSON.stringify(data))
+    localStorage.setItem('last-order', JSON.stringify(order))
     clearCart()
-    router.push({ name: 'order-confirmation', params: { order: data } })
+    router.push({ name: 'order-confirmation', params: { order } })
   } catch (e) {
     errorMessages.value = ['Network or server error']
+    snackbar.value = true
   }
 }
 </script>
