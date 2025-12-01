@@ -14,12 +14,16 @@ export const cartTotal = computed(() =>
   state.items.reduce((sum, it) => sum + it.product.price * it.qty, 0)
 )
 
-export function addToCart(product) {
+export function addToCart(product, delta = 1) {
   const found = state.items.find(it => it.product.id === product.id)
   if (found) {
-    found.qty += 1
-  } else {
-    state.items.push({ id: product.id, product, qty: 1 })
+    found.qty += delta
+    if (found.qty < 1) {
+      const idx = state.items.findIndex(it => it.product.id === product.id)
+      if (idx !== -1) state.items.splice(idx, 1)
+    }
+  } else if (delta > 0) {
+    state.items.push({ id: product.id, product, qty: delta })
   }
 }
 

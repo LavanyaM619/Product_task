@@ -44,14 +44,17 @@
 <script>
 import { useRouter } from 'vue-router'
 import { addToCart } from '@/store/cart'
+import { getDiscountedPrice } from '@/utils/price'
 
 export default {
   props: ['product'],
-
   setup(props) {
     const router = useRouter()
-   const discountedPrice =
-   (props.product.price - (props.product.price * props.product.discountPercentage) / 100).toFixed(2)
+
+    const discountedPrice = getDiscountedPrice(
+      props.product.price,
+      props.product.discountPercentage
+    )
 
     function open() {
       router.push({ name: 'product', params: { id: props.product.id } })
@@ -66,6 +69,7 @@ export default {
   },
 }
 </script>
+
 
 <style scoped>
 .custom-black-btn {
