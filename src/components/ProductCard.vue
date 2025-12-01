@@ -38,10 +38,14 @@
         Add To Cart
       </v-btn>
     </v-card-actions>
+    <v-snackbar v-model="snackbar" color="success" :timeout="2000">
+      Added to cart!
+    </v-snackbar>
   </v-card>
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { addToCart } from '@/store/cart'
 import { getDiscountedPrice } from '@/utils/price'
@@ -50,6 +54,7 @@ export default {
   props: ['product'],
   setup(props) {
     const router = useRouter()
+    const snackbar = ref(false)
 
     const discountedPrice = getDiscountedPrice(
       props.product.price,
@@ -62,10 +67,10 @@ export default {
 
     function add() {
       addToCart(props.product, 1)
-      alert('Added to cart')
+      snackbar.value = true
     }
 
-    return { open, add, discountedPrice }
+    return { open, add, discountedPrice, snackbar }
   },
 }
 </script>
