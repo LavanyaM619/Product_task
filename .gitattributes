@@ -1,2 +1,13 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Node modules
+/node_modules
+
+# Vite cache
+/.vite
+
+# Mac system files
+.DS_Store
+
+# Environment variables
+.env
