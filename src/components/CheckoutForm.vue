@@ -6,15 +6,31 @@
       <v-alert v-if="successMessage" type="success" prominent class="mb-4">
         {{ successMessage }}
       </v-alert>
-    <v-text-field v-model="name" label="Name" required></v-text-field>
-    <v-text-field v-model="email" label="Email" required type="email"></v-text-field>
-    <v-text-field v-model="address" label="Address" required></v-text-field>
-    <v-text-field v-model="phone" label="Phone" required></v-text-field>
+    <v-text-field v-model="name" label="Name" :rules="nameRules" required @input="onNameInput"></v-text-field>
+    <v-text-field v-model="email" label="Email" :rules="emailRules" required type="email"></v-text-field>
+    <v-text-field v-model="address" label="Address" :rules="addressRules" required></v-text-field>
+    <v-text-field v-model="phone" label="Phone" :rules="phoneRules" required type="tel" @input="onPhoneInput"></v-text-field>
     <v-btn type="submit" color="primary" class="mt-4">Submit Order</v-btn>
   </v-form>
 </template>
 
 <script setup>
+
+function onNameInput(e) {
+  const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, '')
+  if (onlyLetters !== e.target.value) {
+    e.target.value = onlyLetters
+    name.value = onlyLetters
+  }
+}
+
+function onPhoneInput(e) {
+  const onlyNumbers = e.target.value.replace(/[^\d]/g, '')
+  if (onlyNumbers !== e.target.value) {
+    e.target.value = onlyNumbers
+    phone.value = onlyNumbers
+  }
+}
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { cartItems } from '@/store/cart.js'
@@ -25,26 +41,30 @@ const email = ref('')
 const address = ref('')
 const phone = ref('')
 const errorMessages = ref([])
-  const successMessage = ref('')
+const successMessage = ref('')
 const router = useRouter()
 
-function validate() {
-  const errors = []
-  if (!name.value) errors.push('Name is required')
-  if (!email.value) errors.push('Email is required')
-  else if (!/^\S+@\S+\.\S+$/.test(email.value)) errors.push('Email must be valid')
-  if (!address.value) errors.push('Address is required')
-  if (!phone.value) errors.push('Phone is required')
-  return errors
-}
+
+const nameRules = [
+  v => !!v || 'Name is required',
+  v => !v || /^[A-Za-z\s]+$/.test(v) || 'Name must contain only letters and spaces'
+]
+const emailRules = [
+  v => !!v || 'Email is required',
+  v => !v || /^\S+@\S+\.\S+$/.test(v) || 'Email must be valid'
+]
+const addressRules = [v => !!v || 'Address is required']
+const phoneRules = [
+  v => !!v || 'Phone is required',
+  v => !v || /^\d+$/.test(v) || 'Phone must contain only numbers'
+]
+
+const form = ref(null)
 
 async function onSubmit() {
   errorMessages.value = []
-  const errors = validate()
-  if (errors.length) {
-    errorMessages.value = errors
-    return
-  }
+  const valid = await form.value?.validate?.()
+  if (!valid) return
   const products = cartItems.value
     .map(item => {
       const id = item.product.id ? String(item.product.id) : ''
@@ -66,7 +86,7 @@ async function onSubmit() {
     })
     .filter(p => p.id && p.image)
   try {
-    const res = await fetch('https://wwoecxrmqanzrqbjfwcd.supabase.co/functions/v1/checkout', {
+    const res = await fetch(import.meta.env.VITE_CHECKOUT_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
