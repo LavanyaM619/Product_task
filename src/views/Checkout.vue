@@ -72,7 +72,7 @@ async function submitCheckout() {
     products
   }
   try {
-    const res = await fetch('https://wwoecxrmqanzrqbjfwcd.supabase.co/functions/v1/checkout', {
+     const res = await fetch(import.meta.env.VITE_CHECKOUT_API_URL,{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
