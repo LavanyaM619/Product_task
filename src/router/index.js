@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
 import Home from '@/pages/Home.vue'
 import ProductList from '@/views/ProductList.vue'
 import ProductDetail from '@/views/ProductDetail.vue'
 import Checkout from '@/views/Checkout.vue'
 import OrderConfirmation from '@/views/OrderConfirmation.vue'
+import NotFound from '@/views/NotFound.vue'
 
 
 const routes = [
@@ -12,6 +14,7 @@ const routes = [
   { path: '/product/:id', name: 'product', component: ProductDetail, props: true },
   { path: '/checkout', name: 'checkout', component: Checkout },
   { path: '/order-confirmation', name: 'order-confirmation', component: OrderConfirmation, props: true },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFound },
 ]
 
 export default createRouter({
