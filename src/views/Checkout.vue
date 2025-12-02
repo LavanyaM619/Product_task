@@ -80,10 +80,8 @@ async function submitCheckout() {
     const data = await res.json()
     console.log('API response:', data)
     if (data && data.orderId) {
-      // Clear cart after successful order
       const { clearCart } = await import('@/store/cart')
       clearCart()
-      // Navigate to Order Confirmation page, pass order data
       router.push({ name: 'order-confirmation', params: { order: data } })
     }
   } catch (e) {
