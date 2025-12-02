@@ -7,7 +7,6 @@
     </v-row>
     <div v-else>Loading...</div>
     <Footer/>
-    <v-btn color="success" @click="goToCheckout">Checkout</v-btn>
   </v-container>
 </template>
 

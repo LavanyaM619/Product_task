@@ -1,104 +1,91 @@
-
 <template>
-  <v-container class="pa-8">
-    <v-card class="pa-6" elevation="2">
-      <v-card-title class="text-h5 mb-4">Order Confirmation</v-card-title>
-      <v-card-text>
-        <div v-if="order.value && order.value.orderId">
-          <v-row>
-            <v-col cols="12" md="6">
+  <v-container class="py-10">
+    <v-row justify="center">
+      <v-col cols="12" md="8" lg="6">
+        <v-card elevation="4">
+          <v-card-title class="text-h5">Order Confirmation</v-card-title>
+          <v-card-text>
+            <div v-if="order">
               <v-list dense>
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>Order ID</v-list-item-title>
-                    <v-list-item-subtitle>{{ order.value.orderId }}</v-list-item-subtitle>
+                    <v-list-item-title class="font-weight-bold">Order ID:</v-list-item-title>
+                    <v-list-item-subtitle>{{ order.orderId }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
+                <OrderCustomerDetails
+                  :name="order.customer?.name || order.name"
+                  :email="order.customer?.email || order.email"
+                  :address="order.customer?.address || order.address"
+                  :phone="order.customer?.phone || order.phone"
+                />
+                <OrderSummary :products="order.products" />
                 <v-list-item>
                   <v-list-item-content>
-                    <v-list-item-title>Name</v-list-item-title>
-                    <v-list-item-subtitle>{{ order.value.name }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Address</v-list-item-title>
-                    <v-list-item-subtitle>{{ order.value.address }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Phone</v-list-item-title>
-                    <v-list-item-subtitle>{{ order.value.phone }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Email</v-list-item-title>
-                    <v-list-item-subtitle>{{ order.value.email }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Total Amount</v-list-item-title>
-                    <v-list-item-subtitle>{{ order.value.totalAmount }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title>Order Date</v-list-item-title>
+                    <v-list-item-title class="font-weight-bold">Order Date:</v-list-item-title>
                     <v-list-item-subtitle>{{ formattedDate }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item>
               </v-list>
-            </v-col>
-            <v-col cols="12" md="6">
-              <v-card class="pa-2">
-                <v-card-title class="text-h6">Products</v-card-title>
-                <v-divider></v-divider>
-                <v-list>
-                  <v-list-item v-for="product in order.value.products" :key="product.id">
-                    <v-list-item-avatar>
-                      <v-img :src="product.image" alt="Product image" />
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title>{{ product.title }}</v-list-item-title>
-                      <v-list-item-subtitle>Price: {{ product.price }} | Qty: {{ product.quantity }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-              </v-card>
-            </v-col>
-          </v-row>
-        </div>
-        <div v-else>
-          <v-alert type="error" prominent>
-            No order details found. Please complete a checkout first.
-          </v-alert>
-        </div>
-      </v-card-text>
-    </v-card>
+            </div>
+            <div v-else>
+              <v-alert type="error">No order details found.</v-alert>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn color="primary" @click="$router.push('/')">Back to Home</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
+<script>
+import OrderCustomerDetails from '@/components/OrderCustomerDetails.vue';
+import OrderSummary from '@/components/OrderSummary.vue';
+import { getDiscountedPrice } from '@/utils/price';
 
-<script setup>
-import { onMounted, computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-const order = ref(route.params.order || (history.state && history.state.order) || {})
-
-onMounted(() => {
-  if (!order.value) {
-    const lastOrder = localStorage.getItem('last-order')
-    if (lastOrder) {
-      order.value = JSON.parse(lastOrder)
+export default {
+  name: 'OrderConfirmation',
+  components: {
+    OrderCustomerDetails,
+    OrderSummary
+  },
+  data() {
+    return {
+      order: null
+    }
+  },
+  computed: {
+    formattedDate() {
+      if (!this.order?.createdAt) return '';
+      return new Date(this.order.createdAt).toLocaleString();
+    },
+    computedTotalAmount() {
+      if (!this.order || !Array.isArray(this.order.products)) return 0;
+      return this.order.products.reduce((sum, p) => {
+       const price= Number(getDiscountedPrice(it.product.price, it.product.discountPercentage));
+        return sum + (Number(price) * (p.quantity || 1));
+      }, 0);
+    },
+  },
+  created() {
+    if (this.$route.params.order) {
+      this.order = this.$route.params.order;
+    } else {
+      try {
+        const lastOrder = localStorage.getItem('last-order');
+        this.order = lastOrder ? JSON.parse(lastOrder) : null;
+      } catch (e) {
+        this.order = null;
+      }
     }
   }
-})
-
-const formattedDate = computed(() => {
-  if (!order.value || !order.value.createdAt) return ''
-  return new Date(order.value.createdAt).toLocaleString()
-})
+}
 </script>
+
+<style scoped>
+.font-weight-bold {
+  font-weight: bold;
+}
+</style>

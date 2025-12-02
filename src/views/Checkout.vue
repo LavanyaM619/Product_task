@@ -72,13 +72,31 @@ async function submitCheckout() {
     products
   }
   try {
-    const res = await fetch('https://wwoecxrmqanzrqbjfwcd.supabase.co/functions/v1/checkout', {
+     const res = await fetch(import.meta.env.VITE_CHECKOUT_API_URL,{
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
     const data = await res.json()
     console.log('API response:', data)
+    if (data && data.orderId) {
+      const { clearCart } = await import('@/store/cart')
+      clearCart()
+      router.push({
+        name: 'OrderConfirmation',
+        state: {
+          total: this.cartTotal,
+          customer: {
+            name: name.value,
+            email: email.value,
+            address: address.value,
+            phone: phone.value
+          },
+          items: data.products,
+          orderDate: new Date().toLocaleString()
+        }
+      })
+    }
   } catch (e) {
     console.error('Network error', e)
   } finally {

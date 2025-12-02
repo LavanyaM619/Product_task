@@ -70,6 +70,11 @@
               Total: Rs {{ total.toFixed(2) }}
             </div>
           </div>
+          <div v-if="items.length > 0" class="text-right mt-4">
+            <v-btn color="primary" @click="goToCheckout">
+              Checkout
+            </v-btn>
+          </div>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -77,9 +82,11 @@
 </template>
 
 <script>
+
 import { cartItems, cartTotal, addToCart, removeFromCart } from '@/store/cart'
 import { computed, ref } from 'vue'
 import { getDiscountedPrice } from '@/utils/price'
+import { useRouter } from 'vue-router'
 
 export default {
   setup() {
@@ -99,7 +106,13 @@ export default {
     }
     const remove = (item) => removeFromCart(item.product.id)
 
-    return { show, items, total, totalCount, increase, decrease, remove, getDiscountedPrice }
+    const router = useRouter()
+    const goToCheckout = () => {
+      show.value = false
+      router.push('/checkout')
+    }
+
+    return { show, items, total, totalCount, increase, decrease, remove, getDiscountedPrice, goToCheckout }
   }
 }
 </script>
