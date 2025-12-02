@@ -82,7 +82,20 @@ async function submitCheckout() {
     if (data && data.orderId) {
       const { clearCart } = await import('@/store/cart')
       clearCart()
-      router.push({ name: 'order-confirmation', params: { order: data } })
+      router.push({
+        name: 'OrderConfirmation',
+        state: {
+          total: this.cartTotal,
+          customer: {
+            name: name.value,
+            email: email.value,
+            address: address.value,
+            phone: phone.value
+          },
+          items: data.products,
+          orderDate: new Date().toLocaleString()
+        }
+      })
     }
   } catch (e) {
     console.error('Network error', e)

@@ -19,13 +19,7 @@
                   :address="order.customer?.address || order.address"
                   :phone="order.customer?.phone || order.phone"
                 />
-               <OrderSummary/>
-                <v-list-item>
-                  <v-list-item-content>
-                    <v-list-item-title class="font-weight-bold">Total Amount:</v-list-item-title>
-                    <v-list-item-subtitle>{{ computedTotalAmount | currency }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
+                <OrderSummary :products="order.products" />
                 <v-list-item>
                   <v-list-item-content>
                     <v-list-item-title class="font-weight-bold">Order Date:</v-list-item-title>
@@ -46,9 +40,7 @@
     </v-row>
   </v-container>
 </template>
-
 <script>
-
 import OrderCustomerDetails from '@/components/OrderCustomerDetails.vue';
 import OrderSummary from '@/components/OrderSummary.vue';
 import { getDiscountedPrice } from '@/utils/price';
@@ -57,7 +49,7 @@ export default {
   name: 'OrderConfirmation',
   components: {
     OrderCustomerDetails,
-      OrderSummary
+    OrderSummary
   },
   data() {
     return {
@@ -72,10 +64,10 @@ export default {
     computedTotalAmount() {
       if (!this.order || !Array.isArray(this.order.products)) return 0;
       return this.order.products.reduce((sum, p) => {
-        const price = getDiscountedPrice(p.price, p.discountPercentage);
+       const price= Number(getDiscountedPrice(it.product.price, it.product.discountPercentage));
         return sum + (Number(price) * (p.quantity || 1));
       }, 0);
-    }
+    },
   },
   created() {
     if (this.$route.params.order) {
